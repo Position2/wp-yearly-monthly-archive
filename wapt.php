@@ -42,32 +42,48 @@ class wapt_Blog_Archives extends WP_Widget {
 				   endif;  
  
       echo '<div class="blog-list-archive">';
+ 
 
-		$years = $wpdb->get_col("SELECT DISTINCT YEAR(post_date)
-										FROM $wpdb->posts
-										 WHERE post_status = 'publish'
-										AND post_type = 'post' 
-										ORDER BY post_date DESC");
+		$query = $wpdb->prepare('
+				            SELECT YEAR(%1$s.post_date) AS `year`, count(%1$s.ID) as `posts`
+				            FROM %1$s
+				            WHERE %1$s.post_type IN ("post")
+				            AND %1$s.post_status IN ("publish")
+				            GROUP BY YEAR(%1$s.post_date)
+				            ORDER BY %1$s.post_date',
+				            $wpdb->posts
+        );
+
+      $results = $wpdb->get_results($query);    
+ 
 		 echo ' <ul class="archive-menu">';
-		foreach($years as $year) :
-		      echo '<li class="year-archive"><a href="JavaScript:void(0)">'.$year.'</a>';
-		       
-				     $months = $wpdb->get_col("SELECT DISTINCT MONTH(post_date)
-											          FROM $wpdb->posts 
-											          WHERE post_status = 'publish' 
-											          AND post_type = 'post'
-											          AND YEAR(post_date) = '".$year."' 
-											          ORDER BY post_date DESC");
+		foreach($results as $result) :
+		      echo '<li class="year-archive"><a href="JavaScript:void(0)">'.$result->year.'('.$result->posts.')</a>';
+
+
+		           $query = $wpdb->prepare('
+				            SELECT MONTH(%1$s.post_date) AS `month`, count(%1$s.ID) as `posts`
+				            FROM %1$s
+				            WHERE %1$s.post_type IN ("post")
+				            AND %1$s.post_status IN ("publish")
+				            AND YEAR(post_date) = '.$result->year.'
+				            GROUP BY MONTH(%1$s.post_date)
+				            ORDER BY %1$s.post_date',
+				            $wpdb->posts
+					        );
+
+					      $monthresults = $wpdb->get_results($query);   
+		    
  				echo ' <ul style="display:none" class="archive-sub-menu">';
 
-		        foreach($months as $month) :
+		        foreach($monthresults as $monthresult) :
 		              // '. get_month_link($year, $month).'
-				         echo '<li class="month-archive"><a href="JavaScript:void(0)">'.date( 'F', mktime(0, 0, 0, $month) ).'</a>';
+				         echo '<li class="month-archive"><a href="JavaScript:void(0)">'.date( 'F', mktime(0, 0, 0, $monthresult->month) ).'('.$monthresult->posts.')</a>';
 
 		                   $sposts = $wpdb->get_col( " SELECT ID
 											                FROM $wpdb->posts
-											                WHERE MONTH(post_date) = '$month'
-										                    AND YEAR(post_date) =  '$year'
+											                WHERE MONTH(post_date) = '$monthresult->month'
+										                    AND YEAR(post_date) =  '$result->year'
 										                    AND `post_status` = 'publish'
 										                    AND `post_type` = 'post'
 		            										ORDER BY post_date DESC " );
