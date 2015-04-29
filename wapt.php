@@ -36,10 +36,10 @@ class wapt_Blog_Archives extends WP_Widget {
 		// Display the widget title 
             echo ' <!-- BLOG ARCHIVES BEGIN -->' ;         
             echo' <div id="BlogArchivesWrapper">
-        	<div id="BlogArchivesList">';
-           if ($title):
-			echo $before_title . $title . $after_title;
-		   endif;  
+        			<div id="BlogArchivesList">';
+		           if ($title):
+					echo $before_title . $title . $after_title;
+				   endif;  
  
       echo '<div class="blog-list-archive">';
 
@@ -86,10 +86,12 @@ class wapt_Blog_Archives extends WP_Widget {
 			    </li>';
 	 endforeach; 
    echo '</ul>';
- wp_reset_query();
+   wp_reset_query();
    echo '</div>';
-          
-				echo  $after_widget;
+   echo' </div> <div>';
+   echo ' <!-- end of BLOG ARCHIVES BEGIN -->' ;  
+
+   echo  $after_widget;
 	}  // end of widgets
 	 
 
