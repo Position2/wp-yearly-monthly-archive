@@ -50,7 +50,7 @@ class wapt_Blog_Archives extends WP_Widget {
 				            WHERE %1$s.post_type IN ("post")
 				            AND %1$s.post_status IN ("publish")
 				            GROUP BY YEAR(%1$s.post_date)
-				            ORDER BY %1$s.post_date',
+				            ORDER BY %1$s.post_date DESC',
 				            $wpdb->posts
         );
 
