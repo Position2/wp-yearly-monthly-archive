@@ -103,21 +103,12 @@ class wapt_Blog_Archives extends WP_Widget {
 	 endforeach; 
    echo '</ul>';
    wp_reset_query();
-   echo '</div>';
-   echo' </div> <div>';
+   echo '</div> </div> </div>';
    echo ' <!-- end of BLOG ARCHIVES BEGIN -->' ;  
 
    echo  $after_widget;
 	}  // end of widgets
 	 
-
-
-	function wapt_posts_groupby($groupby) {
-			 global $wpdb;
-			 $groupby = "{$wpdb->posts}.post_author";
-			 return $groupby;
-	} // end of wapt_posts_groupby function
-	//Update the widget function begain
 
 	function update( $new_instance, $old_instance ) {
 				$instance = $old_instance;
